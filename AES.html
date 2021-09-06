@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<head>
+    <title>AES Algorithm - Cryptography</title>
+</head>
+<script>
+    function mul(n1, n2){
+        if(n2==2){
+            if((parseInt(n1,16)*2)>255){
+                return (parseInt(n1,16)*2)%256 ^ 27;
+            }
+            else{
+                return (parseInt(n1,16)*2);
+            }
+        }
+        else{
+            if((parseInt(n1,16)*2)>255){
+                return ((parseInt(n1,16)*2)%256 ^ 27) ^ (parseInt(n1,16));
+            }
+            else{
+                return (parseInt(n1,16)*2) ^ (parseInt(n1,16));
+            }
+        }
+    }
+    function mixcolumn(){
+        var x = document.getElementById("hex").value;
+        var h1 = x.split(" ");
+        var h2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+        h2[0] = mul(h1[0],2) ^ mul(h1[4],3) ^ parseInt(h1[8],16) ^ parseInt(h1[12],16);    
+        h2[1] = mul(h1[1],2) ^ mul(h1[5],3) ^ parseInt(h1[9],16) ^ parseInt(h1[13],16);    
+        h2[2] = mul(h1[2],2) ^ mul(h1[6],3) ^ parseInt(h1[10],16) ^ parseInt(h1[14],16);    
+        h2[3] = mul(h1[3],2) ^ mul(h1[7],3) ^ parseInt(h1[11],16) ^ parseInt(h1[15],16);
+
+        h2[4] = parseInt(h1[0],16) ^ mul(h1[4],2) ^ mul(h1[8],3) ^ parseInt(h1[12],16);    
+        h2[5] = parseInt(h1[1],16) ^ mul(h1[5],2) ^ mul(h1[9],3) ^ parseInt(h1[13],16);    
+        h2[6] = parseInt(h1[2],16) ^ mul(h1[6],2) ^ mul(h1[10],3) ^ parseInt(h1[14],16);   
+        h2[7] = parseInt(h1[3],16) ^ mul(h1[7],2) ^ mul(h1[11],3) ^ parseInt(h1[15],16);
+
+        h2[8] = parseInt(h1[0],16) ^ parseInt(h1[4],16) ^ mul(h1[8],2) ^ mul(h1[12],3);    
+        h2[9] = parseInt(h1[1],16) ^ parseInt(h1[5],16) ^ mul(h1[9],2) ^ mul(h1[13],3);   
+        h2[10] = parseInt(h1[2],16) ^ parseInt(h1[6],16) ^ mul(h1[10],2) ^ mul(h1[14],3);  
+        h2[11] = parseInt(h1[3],16) ^ parseInt(h1[7],16) ^ mul(h1[11],2) ^ mul(h1[15],3);
+
+        h2[12] = mul(h1[0],3) ^ parseInt(h1[4],16) ^ parseInt(h1[8],16) ^ mul(h1[12],2);    
+        h2[13] = mul(h1[1],3) ^ parseInt(h1[5],16) ^ parseInt(h1[9],16) ^ mul(h1[13],2);      
+        h2[14] = mul(h1[2],3) ^ parseInt(h1[6],16) ^ parseInt(h1[10],16) ^ mul(h1[14],2);      
+        h2[15] = mul(h1[3],3) ^ parseInt(h1[7],16) ^ parseInt(h1[11],16) ^ mul(h1[15],2);  
+
+           
+        
+        var output = [[h2[0].toString(16),h2[1].toString(16),h2[2].toString(16),h2[3].toString(16)],
+                        [h2[4].toString(16),h2[5].toString(16),h2[6].toString(16),h2[7].toString(16)],
+                        [h2[8].toString(16),h2[9].toString(16),h2[10].toString(16),h2[11].toString(16)],
+                         [h2[12].toString(16),h2[13].toString(16),h2[14].toString(16),h2[15].toString(16)]];
+        
+        document.getElementById("demo").innerHTML = "02 03 01 01"+"<br>"+
+                                                    "01 02 03 01"+"<br>"+
+                                                    "01 01 02 03"+"<br>"+
+                                                    "03 01 01 02"+"<br>"+"<br>"+
+                                                    "X"+"<br>"+"<br>"+
+                                                    h1[0]+" "+h1[1]+" "+h1[2]+" "+h1[3]+" "+"<br>"+
+                                                    h1[4]+" "+h1[5]+" "+h1[6]+" "+h1[7]+" "+"<br>"+
+                                                    h1[8]+" "+h1[9]+" "+h1[10]+" "+h1[11]+" "+"<br>"+
+                                                    h1[12]+" "+h1[13]+" "+h1[14]+" "+h1[15]+" "+"<br>";
+
+        document.getElementById("demo1").innerHTML = "C11 = (02*"+h1[0]+") + (03*"+h1[4]+") + (01*"+h1[8]+") + (01*"+h1[12]+") = "+
+                                                    mul(h1[0],2).toString(16)+" + "+ mul(h1[4],3).toString(16)+" + " + parseInt(h1[8],16).toString(16)+" + "+parseInt(h1[12],16).toString(16)+
+                                                    " = "+output[0][0]+"<br><br>"+
+                                                    "C12 = (02*"+h1[1]+") + (03*"+h1[5]+") + (01*"+h1[9]+") + (01*"+h1[13]+") = "+
+                                                    mul(h1[1],2).toString(16)+" + "+ mul(h1[5],3).toString(16)+" + " + parseInt(h1[9],16).toString(16)+" + "+parseInt(h1[13],16).toString(16)+
+                                                    " = "+output[0][1]+"<br><br>"+
+                                                    "C13 = (02*"+h1[2]+") + (03*"+h1[6]+") + (01*"+h1[10]+") + (01*"+h1[14]+") = "+
+                                                    mul(h1[2],2).toString(16)+" + "+ mul(h1[6],3).toString(16)+" + " + parseInt(h1[10],16).toString(16)+" + "+parseInt(h1[14],16).toString(16)+
+                                                    " = "+output[0][2]+"<br><br>"+
+                                                    "C14 = (02*"+h1[3]+") + (03*"+h1[7]+") + (01*"+h1[11]+") + (01*"+h1[15]+") = "+
+                                                    mul(h1[3],2).toString(16)+" + "+ mul(h1[7],3).toString(16)+" + " + parseInt(h1[11],16).toString(16)+" + "+parseInt(h1[15],16).toString(16)+
+                                                    " = "+output[0][3]+"<br><br>"+
+
+                                                    "C21 = (01*"+h1[0]+") + (02*"+h1[4]+") + (03*"+h1[8]+") + (01*"+h1[12]+") = "+
+                                                    parseInt(h1[0],16).toString(16)+" + "+ mul(h1[4],2).toString(16)+" + " + mul(h1[8],3).toString(16)+" + "+parseInt(h1[12],16).toString(16)+
+                                                    " = "+output[1][0]+"<br><br>"+
+                                                    "C22 = (01*"+h1[1]+") + (02*"+h1[5]+") + (03*"+h1[9]+") + (01*"+h1[13]+") = "+
+                                                    parseInt(h1[1],16).toString(16)+" + "+ mul(h1[5],2).toString(16)+" + " + mul(h1[9],3).toString(16)+" + "+parseInt(h1[13],16).toString(16)+
+                                                    " = "+output[1][1]+"<br><br>"+
+                                                    "C23 = (01*"+h1[2]+") + (02*"+h1[6]+") + (03*"+h1[10]+") + (01*"+h1[14]+") = "+
+                                                    parseInt(h1[2],16).toString(16)+" + "+ mul(h1[6],2).toString(16)+" + " + mul(h1[10],3).toString(16)+" + "+parseInt(h1[14],16).toString(16)+
+                                                    " = "+output[1][2]+"<br><br>"+
+                                                    "C24 = (01*"+h1[3]+") + (02*"+h1[7]+") + (03*"+h1[11]+") + (01*"+h1[15]+") = "+
+                                                    parseInt(h1[3],16).toString(16)+" + "+ mul(h1[7],2).toString(16)+" + " + mul(h1[11],3).toString(16)+" + "+parseInt(h1[15],16).toString(16)+
+                                                    " = "+output[1][3]+"<br><br>"+
+
+                                                    "C31 = (01*"+h1[0]+") + (01*"+h1[4]+") + (02*"+h1[8]+") + (03*"+h1[12]+") = "+
+                                                    parseInt(h1[0],16).toString(16)+" + "+ parseInt(h1[4],16).toString(16)+" + " + mul(h1[8],2).toString(16)+" + "+mul(h1[12],3).toString(16)+
+                                                    " = "+output[2][0]+"<br><br>"+
+                                                    "C32 = (01*"+h1[1]+") + (01*"+h1[5]+") + (02*"+h1[9]+") + (03*"+h1[13]+") = "+
+                                                    parseInt(h1[1],16).toString(16)+" + "+ parseInt(h1[5],16).toString(16)+" + " + mul(h1[9],2).toString(16)+" + "+mul(h1[13],3).toString(16)+
+                                                    " = "+output[2][1]+"<br><br>"+
+                                                    "C33 = (01*"+h1[2]+") + (01*"+h1[6]+") + (02*"+h1[10]+") + (03*"+h1[14]+") = "+
+                                                    parseInt(h1[2],16).toString(16)+" + "+ parseInt(h1[6],16).toString(16)+" + " + mul(h1[10],2).toString(16)+" + "+mul(h1[14],3).toString(16)+
+                                                    " = "+output[2][2]+"<br><br>"+
+                                                    "C34 = (01*"+h1[3]+") + (01*"+h1[7]+") + (02*"+h1[11]+") + (03*"+h1[15]+") = "+
+                                                    parseInt(h1[3],16).toString(16)+" + "+ parseInt(h1[7],16).toString(16)+" + " + mul(h1[11],2).toString(16)+" + "+mul(h1[15],3).toString(16)+
+                                                    " = "+output[2][3]+"<br><br>"+
+
+                                                    "C41 = (03*"+h1[0]+") + (01*"+h1[4]+") + (01*"+h1[8]+") + (02*"+h1[12]+") = "+
+                                                    mul(h1[0],3).toString(16)+" + "+ parseInt(h1[4],16).toString(16)+" + " + parseInt(h1[8],16).toString(16)+" + "+mul(h1[12],2).toString(16)+
+                                                    " = "+output[3][0]+"<br><br>"+
+                                                    "C42 = (03*"+h1[1]+") + (01*"+h1[5]+") + (01*"+h1[9]+") + (02*"+h1[13]+") = "+
+                                                    mul(h1[1],3).toString(16)+" + "+ parseInt(h1[5],16).toString(16)+" + " + parseInt(h1[9],16).toString(16)+" + "+mul(h1[13],2).toString(16)+
+                                                    " = "+output[3][1]+"<br><br>"+
+                                                    "C43 = (03*"+h1[2]+") + (01*"+h1[6]+") + (01*"+h1[10]+") + (02*"+h1[14]+") = "+
+                                                    mul(h1[2],3).toString(16)+" + "+ parseInt(h1[6],16).toString(16)+" + " + parseInt(h1[10],16).toString(16)+" + "+mul(h1[14],2).toString(16)+
+                                                    " = "+output[3][2]+"<br><br>"+
+                                                    "C44 = (03*"+h1[3]+") + (01*"+h1[7]+") + (01*"+h1[11]+") + (02*"+h1[15]+") = "+
+                                                    mul(h1[3],3).toString(16)+" + "+ parseInt(h1[7],16).toString(16)+" + " + parseInt(h1[11],16).toString(16)+" + "+mul(h1[15],2).toString(16)+
+                                                    " = "+output[3][3]+"<br><br>";
+
+        document.getElementById("demo2").innerHTML = "Output is "+"<br> "+"<br> "+
+                                                     "C11 C12 C13 C14"+"<br>"+
+                                                     "C21 C22 C23 C24"+"<br>"+
+                                                     "C31 C32 C33 C34"+"<br>"+
+                                                     "C41 C42 C43 C44"+"<br>"+
+                                                     "which is equal to"+"<br>"+"<br> "+
+                                                     output[0][0]+" "+output[0][1]+" "+output[0][2]+" "+output[0][3]+" "+"<br>"+
+                                                     output[1][0]+" "+output[1][1]+" "+output[1][2]+" "+output[1][3]+" "+"<br>"+
+                                                     output[2][0]+" "+output[2][1]+" "+output[2][2]+" "+output[2][3]+" "+"<br>"+
+                                                     output[3][0]+" "+output[3][1]+" "+output[3][2]+" "+output[3][3]+" "+"<br>";
+
+    }
+    function sub(){
+        var x = document.getElementById("hex").value;
+        var h1 = x.split(" ");
+        var sbox = [['63','7c','77','7b','f2','6b','6f','c5','30','01','67','2b','fe','d7','ab','76'],
+                    ['ca','82','c9','7d','fa','59','47','f0','ad','d4','a2','af','9c','a4','72','c0'],
+                    ['b7','fd','93','26','36','3f','f7','cc','34','a5','e5','f1','71','d8','31','15'],
+                    ['04','c7','33','e3','18','96','05','9a','07','12','80','e2','eb','27','b2','75'],
+    
+                    ['09','83','2c','1a','1b','6e','5a','a0','52','3b','d6','b3','29','e3','2f','84'],
+                    ['53','d1','00','ed','20','fc','b1','5b','6a','cb','be','39','4a','4c','58','cf'],
+                    ['d0','ef','aa','fb','43','4d','33','85','45','f9','02','7f','50','3c','9f','a8'],
+                    ['51','a3','40','8f','92','9d','38','f5','bc','b6','da','21','10','ff','f3','d2'],
+    
+                    ['cd','0c','13','ec','5f','97','44','17','c4','a7','7e','3d','64','5d','19','73'],
+                    ['60','81','4f','dc','22','2a','90','88','46','ee','b8','14','de','5e','0b','db'],
+                    ['e0','32','3a','0a','49','06','24','5c','c2','d3','ac','62','91','95','e4','79'],
+                    ['e7','c8','37','6d','8d','d5','4e','a9','6c','56','f4','ea','65','7a','ae','08'],
+    
+                    ['ba','78','25','2e','1c','a6','b4','c6','e8','dd','74','1f','4b','bd','8b','8a'],
+                    ['70','3e','b5','66','48','03','f6','0e','61','35','57','b9','86','c1','1d','9e'],
+                    ['e1','f8','98','11','69','d9','8e','94','9b','1e','87','e9','ce','55','28','df'],
+                    ['8c','a1','89','0d','bf','e6','42','68','41','99','2d','0f','b0','54','bb','16']];
+
+        for(var i=0;i<32;i++){
+            if(h1[i]=='a'|| h1[i]=='A'){
+                h1[i]=10;
+            } else if(h1[i]=='b'|| h1[i]=='B'){
+                h1[i]=11;
+            } else if(h1[i]=='c' || h1[i]=='C'){
+                h1[i]=12;
+            } else if(h1[i]=='d' || h1[i]=='D'){
+                h1[i]=13;
+            } else if(h1[i]=='e' || h1[i]=='E'){
+                h1[i]=14;
+            } else if(h1[i]=='f' || h1[i]=='F'){
+                h1[i]=15;
+            }
+        }
+        
+        document.getElementById("demo").innerHTML = "Values after Substitution"+"<br>"+"<br>"+
+                                                    sbox[h1[0]][h1[1]]+" "+sbox[h1[2]][h1[3]]+" "+sbox[h1[4]][h1[5]]+" "+sbox[h1[6]][h1[7]]+"<br>"+
+                                                    sbox[h1[8]][h1[9]]+" "+sbox[h1[10]][h1[11]]+" "+sbox[h1[12]][h1[13]]+" "+sbox[h1[14]][h1[15]]+"<br>"+
+                                                    sbox[h1[16]][h1[17]]+" "+sbox[h1[18]][h1[19]]+" "+sbox[h1[20]][h1[21]]+" "+sbox[h1[22]][h1[23]]+"<br>"+
+                                                    sbox[h1[24]][h1[25]]+" "+sbox[h1[26]][h1[27]]+" "+sbox[h1[28]][h1[29]]+" "+sbox[h1[30]][h1[31]]+"<br>";
+                                                    
+                                                     
+
+    }
+    function shift(){
+        var x = document.getElementById("hex").value;
+        var h1 = x.split(" ");
+        document.getElementById("demo").innerHTML = "Values after shifting rows"+"<br>"+"<br>"+
+                                                    h1[0]+" "+h1[1]+" "+h1[2]+" "+h1[3]+"<br>"+
+                                                    h1[5]+" "+h1[6]+" "+h1[7]+" "+h1[4]+"<br>"+
+                                                    h1[10]+" "+h1[11]+" "+h1[8]+" "+h1[9]+"<br>"+
+                                                    h1[15]+" "+h1[12]+" "+h1[13]+" "+h1[14]+"<br>";
+    }
+    function add(){
+        var x = document.getElementById("hex1").value;
+        var h1 = x.split(" ");
+        var y = document.getElementById("key").value;
+        var a = document.getElementById("demo1");
+        a.style.display="none";
+        var b = document.getElementById("demo2");
+        b.style.display="none";
+        var k = y.split(" ");
+        var o = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+        o[0] = (parseInt(h1[0],16) ^ parseInt(k[0],16));
+        o[1] = (parseInt(h1[1],16) ^ parseInt(k[1],16));
+        o[2] = (parseInt(h1[2],16) ^ parseInt(k[2],16));
+        o[3] = (parseInt(h1[3],16) ^ parseInt(k[3],16));
+        
+        o[4] = (parseInt(h1[4],16) ^ parseInt(k[4],16));
+        o[5] = (parseInt(h1[5],16) ^ parseInt(k[5],16));
+        o[6] = (parseInt(h1[6],16) ^ parseInt(k[6],16));
+        o[7] = (parseInt(h1[7],16) ^ parseInt(k[7],16));
+    
+        o[8] = (parseInt(h1[8],16) ^ parseInt(k[8],16));
+        o[9] = (parseInt(h1[9],16) ^ parseInt(k[9],16));
+        o[10] = (parseInt(h1[10],16) ^ parseInt(k[10],16));
+        o[11] = (parseInt(h1[11],16) ^ parseInt(k[11],16));
+        
+        o[12] = (parseInt(h1[12],16) ^ parseInt(k[12],16));
+        o[13] = (parseInt(h1[13],16) ^ parseInt(k[13],16));
+        o[14] = (parseInt(h1[14],16) ^ parseInt(k[14],16));
+        o[15] = (parseInt(h1[15],16) ^ parseInt(k[15],16));
+
+        document.getElementById("demo").innerHTML = "Value after Adding round key"+"<br>"+
+                                                    o[0].toString(16)+" "+o[1].toString(16)+" "+o[2].toString(16)+" "+o[3].toString(16)+" "+"<br>"+
+                                                    o[4].toString(16)+" "+o[5].toString(16)+" "+o[6].toString(16)+" "+o[7].toString(16)+" "+"<br>"+
+                                                    o[8].toString(16)+" "+o[9].toString(16)+" "+o[10].toString(16)+" "+o[11].toString(16)+" "+"<br>"+
+                                                    o[12].toString(16)+" "+o[13].toString(16)+" "+o[14].toString(16)+" "+o[15].toString(16)+" "+"<br>";
+        
+    }
+</script>
+<style>
+    body{
+        background-image: url(https://i.stack.imgur.com/1Tzky.png);
+        background-size: cover;
+        margin-left: 20px;
+    }
+    button{
+        background-color:lightgoldenrodyellow;
+        height: 35px;
+        border-radius: 5px;
+        padding: 5px;
+        font-weight: bold;
+    }
+    button:hover{
+        font-size: 15px;
+        background: lightgreen;
+        border-radius: 5px;
+        padding: 5px;
+        font-weight: bold;
+    }
+</style>
+<body>
+    <p>Enter the hex value for matrix multiplication with mix column</p>
+    <p >Give the input seperated by space accordingly</p>
+    <p style="font-weight: bold;">For Substitute Bytes:- Ex: A 1 3 B 4 8 ........(space after each 1 bit)</p>
+    <p style="font-weight: bold;">For Shift rows:- Ex: A1 3B 48 ........(space after each 2 bits)</p>
+    <p style="font-weight: bold;">Mix Column matrix multiplication:- Ex: A1 3B 48 ......(space after each 2 bits)</p>
+    Hex-Value :<input type="text" id="hex" style="width: 1000px;"><br><br>
+    <button onclick="sub()">Substitute Bytes</button>
+    <button onclick="shift()">Shift Rows</button>
+    <button value="multiply" onclick="mixcolumn()">Multiply Mix Column</button><br><br><br>
+    Hex-Value :<input type="text" id="hex1" style="width: 500px;"><br><br>
+    Key-Value :<input type="text" id="key" style="width: 500px;"><br><br>
+    <button value="add" onclick="add()">Add Round Key</button>
+    <p id="demo" style="margin-left: 50px;"></p>
+    <p id="demo1" style="margin-left: 200px; margin-top: -220px;"></p>
+    <p id="demo2"style="margin-left: 800px; margin-top: -520px; color: green; font-weight:bold;"></p>
+    <p id="demo3"></p>
+</body>
